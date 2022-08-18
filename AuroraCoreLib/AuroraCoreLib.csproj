@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Zeroconf" Version="3.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EvtSource">
+      <HintPath>..\..\CommonCore\HomeCommon\EvtSource\bin\Debug\net5.0\EvtSource.dll</HintPath>
+    </Reference>
+    <Reference Include="HomeLoggingCore">
+      <HintPath>Z:\Entwicklung\CommonCore\HomeCommon\HomeLoggingCore\bin\Debug\net5.0\HomeLoggingCore.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

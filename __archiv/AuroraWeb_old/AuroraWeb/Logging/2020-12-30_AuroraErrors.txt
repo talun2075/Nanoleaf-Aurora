@@ -1,0 +1,2 @@
+2020-12-30 13:34:16 | Error | AuroraConstruktor | Exception: Der Thread wurde abgebrochen. | InnerException: System.Threading.ThreadAbortException Der Thread wurde abgebrochen. System.Net.Configuration.SettingsSectionInternal get_Section()
+2020-12-30 13:34:16 | Error | AuroraConstruktor | Exception: Der Thread wurde abgebrochen. | InnerException: System.Threading.ThreadAbortException Der Thread wurde abgebrochen. System.Net.Configuration.SettingsSectionInternal get_Section()

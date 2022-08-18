@@ -1,0 +1,2 @@
+2021-01-04 12:22:23.6880|INFO|Aurora|AuroraEvent:Create:http://192.168.0.210:16021/api/v1/p7rY1vD2YxRQLkLZ8SxhYtVsIhCTMsp3/events?id=3,1
+2021-01-04 12:22:23.6880|INFO|Aurora|AuroraEvent:Create:http://192.168.0.210:16021/api/v1/p7rY1vD2YxRQLkLZ8SxhYtVsIhCTMsp3/events?id=3,1

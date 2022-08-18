@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+Es gibt 5 Atribute 
+ *MacAdress
+ *AuthToken
+ *DeviceName
+ *KnowingIP
+ *Serial
+ Alle müssen belegt sein, sonst gibt es einen Fehler.
+Optional 
+*UseSubscription (Boolean für SSE)
+-->
+<AuroraKnowingDevices>
+  <AuroraKnowingDevice MacAdress="C8:EF:29:5C:91:24" AuthToken="p7rY1vD2YxRQLkLZ8SxhYtVsIhCTMsp3" DeviceName ="Wohnzimmer" KnowingIP="192.168.0.110" Serial="S16432A0525" UseSubscription ="false" />
+  <AuroraKnowingDevice MacAdress="94:9F:5B:E9:5F:A8" AuthToken="vD2YxRQLkLZ8SxhYtVsIhCTMsp3ws5A4" DeviceName ="Esszimmer" KnowingIP="192.168.0.112" Serial="S17122A4899" UseSubscription ="false"/>
+</AuroraKnowingDevices>

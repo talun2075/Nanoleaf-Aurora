@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>7f7a8a6a-f048-4da7-abc2-cc2d8c7f12af</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.WebApiCompatShim" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AuroraCoreLib\AuroraCoreLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="HomeLoggingCore">
+      <HintPath>Z:\Entwicklung\CommonCore\HomeCommon\HomeLoggingCore\bin\Debug\net5.0\HomeLoggingCore.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Configuration\AuroraKnowingDevices.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

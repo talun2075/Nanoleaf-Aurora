@@ -1,0 +1,4 @@
+2020-12-30 13:34:22.6926|INFO|Aurora|AuroraEvent:Create:http://192.168.0.110:16021/api/v1/p7rY1vD2YxRQLkLZ8SxhYtVsIhCTMsp3/events?id=3,1
+2020-12-30 13:34:22.6926|INFO|Aurora|AuroraEvent:Create:http://192.168.0.110:16021/api/v1/p7rY1vD2YxRQLkLZ8SxhYtVsIhCTMsp3/events?id=3,1
+2020-12-30 13:37:28.1512|INFO|Aurora|AuroraEvent:Create:http://192.168.0.110:16021/api/v1/p7rY1vD2YxRQLkLZ8SxhYtVsIhCTMsp3/events?id=3,1
+2020-12-30 13:37:28.1512|INFO|Aurora|AuroraEvent:Create:http://192.168.0.110:16021/api/v1/p7rY1vD2YxRQLkLZ8SxhYtVsIhCTMsp3/events?id=3,1
