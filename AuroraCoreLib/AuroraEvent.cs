@@ -20,7 +20,7 @@ namespace Aurora
             try
             {
                 aec = _aec;
-                AuroraConstants.log.InfoLog("AuroraEvent:Create", aec.URI);
+                //AuroraConstants.log.InfoLog("AuroraEvent:Create", aec.URI);
                 if(evt != null)
                 {
                     evt.Dispose();
@@ -55,7 +55,7 @@ namespace Aurora
                         AuroraFiredEvent aFE = new();
                         aFE = JsonSerializer.Deserialize<AuroraFiredEvent>(e.Message,jsonSerializerOptions);
                         aFE.ID = eIT;
-                        AuroraConstants.log.InfoLog("AuroraEvent:Evt_MessageReceived", e.Message);
+                        //AuroraConstants.log.InfoLog("AuroraEvent:Evt_MessageReceived", e.Message);
                         Aurora_Subscriped_Event_Fired(this, aFE);
                     }
                 }
