@@ -1472,7 +1472,7 @@
             }
             return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) {
                 let ob = 1 - hsv.v / 100;
-                console.log(ob);
+                //console.log(ob);
                 if (ob > 0.6) {
                     ob = 0.6;
                 }

@@ -30,8 +30,8 @@ namespace Aurora
                 evt.MessageReceived += Evt_MessageReceived;
                 evt.Disconnected += async (object sender, DisconnectEventArgs e) =>
                 {
-                    if (e.Exception != null)
-                        AuroraConstants.log.ServerErrorsAdd("AuroraEvent:Disconnected", e.Exception);
+                    //if (e.Exception != null)
+                    //    AuroraConstants.log.ServerErrorsAdd("AuroraEvent:Disconnected", e.Exception);
                     await Task.Delay(e.ReconnectDelay);
                     evt.Start(); // Reconnect to the same URL
                 };
@@ -48,14 +48,13 @@ namespace Aurora
             {
                 if (Enum.TryParse<EventIDTypes>(e.Id, out EventIDTypes eIT))
                 {
-                    if (eIT == EventIDTypes.State || eIT == EventIDTypes.Effects ||eIT == EventIDTypes.Touch)
+                    if (eIT == EventIDTypes.State || eIT == EventIDTypes.Effects ||eIT == EventIDTypes.Touch && !string.IsNullOrEmpty(e.Message))
                     {
                         JsonSerializerOptions jsonSerializerOptions = new();
                         jsonSerializerOptions.Converters.Add(new StringConverter()); //Doku siehe im StringConverter
                         AuroraFiredEvent aFE = new();
                         aFE = JsonSerializer.Deserialize<AuroraFiredEvent>(e.Message,jsonSerializerOptions);
                         aFE.ID = eIT;
-                        //AuroraConstants.log.InfoLog("AuroraEvent:Evt_MessageReceived", e.Message);
                         Aurora_Subscriped_Event_Fired(this, aFE);
                     }
                 }

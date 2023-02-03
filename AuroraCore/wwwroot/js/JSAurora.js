@@ -6,7 +6,7 @@ function NanoleafAurora(option) {
     let auroraWrapper = document.getElementById(option.Wrapper);
     let _PowerDom = [];
     let _SelectedScenarioClass = 'ssc';
-    let _ColorPickers = [];
+    this.ColorPickers = [];
     var _opjectname = option.name || "aurora";
     var Timer = 0;
     var GroupScenariousRendered = false;
@@ -226,7 +226,7 @@ function NanoleafAurora(option) {
             au.state.powerstate.value = true;
         }
         this.Send("SetSelectedScenario/" + serialNo + "/" + v).then(function () {
-            _ColorPickers[serialNo].color.hsv = { h: 0, s: 0, v: au.state.brightness.value };
+            t.ColorPickers[serialNo].color.hsv = { h: 0, s: 0, v: au.state.brightness.value };
             t.RenderAurora();
         }).catch(function (err)
         {
@@ -238,8 +238,8 @@ function NanoleafAurora(option) {
     };
     this.ColorPickerInit = function (serial, aur) {
         var cp = new iro.ColorPicker('#ColorPicker_' + serial, { width: 160, color: { h: aur.state.hue.value, s: aur.state.saturation.value, v: aur.state.brightness.value } });
-        if (typeof _ColorPickers[serial] === "undefined") {
-            _ColorPickers[serial] = cp;
+        if (typeof this.ColorPickers[serial] === "undefined") {
+            this.ColorPickers[serial] = cp;
         }
         //color.setChannel('hsv', 'h', 255);
         cp.on('input:end', function () {
@@ -252,7 +252,7 @@ function NanoleafAurora(option) {
         console.log(serial);
         var aur = this.GetAurora(serial);
         var st = aur.state;
-        var color = _ColorPickers[serial].color.hsv;
+        var color = this.ColorPickers[serial].color.hsv;
         st.hue.value = color.h;
         st.saturation.value = color.s
         st.brightness.value = color.v
@@ -391,9 +391,9 @@ function NanoleafAurora(option) {
                 sd.append(aurscen);
             }
             if (_data[i].nlj.effects.selected !== "*Solid*") {
-                _ColorPickers[aid].color.hsv = { h: 0, s: 0, v: _data[i].nlj.state.brightness.value }
+                this.ColorPickers[aid].color.hsv = { h: 0, s: 0, v: _data[i].nlj.state.brightness.value }
             } else {
-                _ColorPickers[aid].color.hsv = { h: _data[i].nlj.state.hue.value, s: _data[i].nlj.state.saturation.value, v: _data[i].nlj.state.brightness.value }
+                this.ColorPickers[aid].color.hsv = { h: _data[i].nlj.state.hue.value, s: _data[i].nlj.state.saturation.value, v: _data[i].nlj.state.brightness.value }
             }
         }
         return true;
