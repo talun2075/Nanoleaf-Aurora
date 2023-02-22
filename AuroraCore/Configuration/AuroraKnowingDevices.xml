@@ -23,8 +23,8 @@ ChildElemts used for Touch Events
 
 -->
 <AuroraKnowingDevices>
-	<!--<AuroraKnowingDevice Room="Erdgeschoss" MacAdress="00:55:DA:50:42:3F" AuthToken="p7rY1vD2YxRQLkLZ8SxhYtVsIhCTMsp3" DeviceName ="Wohnzimmer" KnowingIP="192.168.0.110" Serial="S16432A0525" UseSubscription ="false" />-->
-	<AuroraKnowingDevice Room="Erdgeschoss" MacAdress="00:55:DA:50:C3:45" AuthToken="vD2YxRQLkLZ8SxhYtVsIhCTMsp3ws5A4" DeviceName ="Esszimmer" KnowingIP="192.168.0.112" Serial="S17122A4899" UseSubscription ="false"/>
+	<AuroraKnowingDevice Room="Wohnzimmer" MacAdress="80:8A:F7:05:EA:7E" AuthToken="3AFO2samaK8lw0tzeAdSUJmfQDtmXpMa" DeviceName ="Wohnzimmer Rechts" KnowingIP="192.168.0.110" Serial="S22150H3322" UseSubscription ="false" />
+	<AuroraKnowingDevice MacAdress="00:55:DA:50:C3:45" AuthToken="vD2YxRQLkLZ8SxhYtVsIhCTMsp3ws5A4" DeviceName ="Esszimmer" KnowingIP="192.168.0.112" Serial="S17122A4899" UseSubscription ="false"/>
 	<AuroraKnowingDevice MacAdress="80:8A:F7:02:5D:52" AuthToken="9ul653pNIxshyPJAETHtxaEFv0imPFHS" DeviceName ="Gästezimmer" KnowingIP="192.168.0.111" Serial="S21300H0094" UseSubscription ="true" UseTouch="true">
 		<TouchData>
 			<SingleTap Hue="54" Saturation="31" Brightness="15" Value="" Action="SetHSV" />
@@ -33,5 +33,6 @@ ChildElemts used for Touch Events
 			<SwipeDown Hue="" Saturation="" Brightness="" Value="-20" Action="SetBrightness" />
 		</TouchData>
 	</AuroraKnowingDevice>
-	<AuroraKnowingDevice Room="Erdgeschoss" MacAdress="80:8A:F7:01:22:A3" AuthToken="flEeeS56j8AD0S768zqiOi83oMB2YXv2" DeviceName ="Wohnzimmer Links" KnowingIP="192.168.0.113" Serial="S21240H6555" UseSubscription ="true"/>
+	<AuroraKnowingDevice Room="Wohnzimmer" MacAdress="80:8A:F7:01:22:A3" AuthToken="flEeeS56j8AD0S768zqiOi83oMB2YXv2" DeviceName ="Wohnzimmer Links" KnowingIP="192.168.0.113" Serial="S21240H6555" UseSubscription ="true"/>
+	<!--<AuroraKnowingDevice Room="Erdgeschoss" MacAdress="00:55:DA:50:42:3F" AuthToken="p7rY1vD2YxRQLkLZ8SxhYtVsIhCTMsp3" DeviceName ="Wohnzimmer Aurora Lights" KnowingIP="192.168.0.110" Serial="S16432A0525" UseSubscription ="false" />-->
 </AuroraKnowingDevices>

@@ -17,6 +17,7 @@ namespace Aurora
         private static readonly Logging log = new(new LoggerWrapperConfig { ErrorFileName = "AuroraErrors.txt", TraceFileName = "AuroraTrace.txt", InfoFileName = "AuroraInfo.txt", ConfigName = "Aurora", AddDateTimeToFilesNames = true });
         private static List<AuroraKnowingDevices> _knowingAuroras = new();
         private static List<String> _groupScenarios;
+        private static readonly Dictionary<String, List<String>> _groupScenariosperRoom = new();
         private static String Configpath = String.Empty;
         #endregion ClassVariables
         #region Private Methods
@@ -370,7 +371,7 @@ namespace Aurora
         /// <returns></returns>
         public async static Task<Boolean> GroupPowerOnAll(Boolean _poweron, Boolean ignoreOldValue = false)
         {
-            return await GroupPowerOn(_poweron, ignoreOldValue, false);
+            return await GroupPowerOn("All",_poweron, ignoreOldValue, false);
         }
         /// <summary>
         /// Change Powerstate for all Auroras with room
@@ -378,7 +379,7 @@ namespace Aurora
         /// <param name="_poweron"></param>
         /// <param name="ignoreOldValue"></param>
         /// <returns></returns>
-        public async static Task<Boolean> GroupPowerOn(Boolean _poweron, Boolean ignoreOldValue = false, Boolean ignoreNonRooms = true)
+        public async static Task<Boolean> GroupPowerOn(string room,Boolean _poweron, Boolean ignoreOldValue = false, Boolean ignoreNonRooms = true)
         {
             Boolean retval = true;
             if (!await CheckAuroraLiving()) return false;
@@ -387,6 +388,7 @@ namespace Aurora
                 foreach (AuroraLigth aurora in AurorasList)
                 {
                     if (string.IsNullOrEmpty(aurora.Room) && ignoreNonRooms) continue;
+                    if(aurora.Room != room && room !="All") continue;
                     try
                     {
                         if (!aurora.NewAurora && aurora.NLJ.State.Powerstate.Value != _poweron || ignoreOldValue)
@@ -437,19 +439,41 @@ namespace Aurora
             return _groupScenarios;
 
         }
+        public async static Task<Dictionary<String, List<String>>> GetGroupScenariosforRooms()
+        {
+            if (_groupScenariosperRoom.Count == 0)
+            {
+               
+                List<String> tempgs = new();
+                if (!await CheckAuroraLiving()) return null;
+
+                foreach (AuroraLigth aurora in AurorasList)
+                {
+                    if (string.IsNullOrEmpty(aurora.Room)) continue;
+
+                    if (!_groupScenariosperRoom.ContainsKey(aurora.Room))
+                    {
+                        _groupScenariosperRoom[aurora.Room] = new();
+                    }
+                    _groupScenariosperRoom[aurora.Room] = !_groupScenariosperRoom[aurora.Room].Any() ? aurora.Scenarios : _groupScenariosperRoom[aurora.Room].Intersect(aurora.Scenarios).ToList();
+                }
+            }
+            return _groupScenariosperRoom;
+
+        }
         /// <summary>
         /// Set Group Scenarios
         /// </summary>
         /// <param name="scenario"></param>
         /// <returns></returns>
-        public async static Task<String> SetGroupScenarios(string scenario)
+        public async static Task<String> SetGroupScenarios(string room, string scenario)
         {
             if (!await CheckAuroraLiving()) return null;
             try
             {
                 foreach (AuroraLigth aurora in AurorasList)
                 {
-                    if (string.IsNullOrEmpty(aurora.Room)) continue;
+                    if (string.IsNullOrEmpty(aurora.Room) || aurora.Room != room) continue;
                     if (aurora.Scenarios.Contains(scenario))
                     {
                         await aurora.SetSelectedScenario(scenario);

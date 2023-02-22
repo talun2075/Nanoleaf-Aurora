@@ -25,6 +25,7 @@ namespace AuroraCore
         public void Configure(IApplicationBuilder app)
         {
             app.UseExceptionHandler("/Home/Error");
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseRouting();

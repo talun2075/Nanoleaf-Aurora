@@ -120,20 +120,20 @@ namespace AuroraWeb.Controllers
             }
             return false;
         }
-        [HttpGet("SetGroupPowerState/{id}")]
-        public async Task<Boolean> SetGroupPowerState(Boolean id)
+        [HttpGet("SetGroupPowerState/{room}/{id}")]
+        public async Task<Boolean> SetGroupPowerState(string room, Boolean id)
         {
-            return await AuroraWrapper.GroupPowerOn(id);
+            return await AuroraWrapper.GroupPowerOn(room,id);
         }
         [HttpGet("SetGroupPowerStateAll/{id}")]
         public async Task<Boolean> SetGroupPowerStateAll(Boolean id)
         {
             return await AuroraWrapper.GroupPowerOnAll(id, true);
         }
-        [HttpGet("SetGroupPowerStateIgnoreOldValue/{id}")]
-        public async Task<Boolean> SetGroupPowerStateIgnoreOldValue(Boolean id)
+        [HttpGet("SetGroupPowerStateIgnoreOldValue/{room}/{id}")]
+        public async Task<Boolean> SetGroupPowerStateIgnoreOldValue(string room, Boolean id)
         {
-            return await AuroraWrapper.GroupPowerOn(id, true);
+            return await AuroraWrapper.GroupPowerOn(room, id, true);
         }
         /// <summary>
         /// Brightness /Helligkeit
@@ -232,15 +232,26 @@ namespace AuroraWeb.Controllers
             return await AuroraWrapper.GetGroupScenarios();
         }
         /// <summary>
+        /// Ermitteln der Gruppenscenarien
+        /// </summary>
+        /// <param name="id">Dummy</param>
+        /// <returns></returns>
+        [HttpGet("GetGroupScenariosForRooms/{id}")]
+        public async Task<Dictionary<String, List<String>>> GetGroupScenariosForRooms(string id)
+        {
+            return await AuroraWrapper.GetGroupScenariosforRooms();
+        }
+        /// <summary>
         /// Setzen der Gruppen Scenarien
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("SetGroupScenario/{id}")]
-        public async Task<String> SetGroupScenario(string id)
+        [HttpGet("SetGroupScenario/{room}/{id}")]
+        public async Task<String> SetGroupScenario(string room, string id)
         {
             if (string.IsNullOrEmpty(id)) return null;
-            return await AuroraWrapper.SetGroupScenarios(id);
+            if (string.IsNullOrEmpty(room)) return null;
+            return await AuroraWrapper.SetGroupScenarios(room,id);
         }
         [HttpGet("SetHue/{id}/{v}")]
         public async Task<Boolean> SetHue(string id, int v)

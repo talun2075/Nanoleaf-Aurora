@@ -11,8 +11,9 @@ function NanoleafAurora(option) {
     var Timer = 0;
     var GroupScenariousRendered = false;
     var _newData = true;
+    var workedGroupPower = [];
     var SSE_Event_Source;
-    this.Eventing = function(){
+    this.Eventing = function () {
         if (typeof window.EventSource === "undefined") {
             //ie also return
             return;
@@ -23,8 +24,8 @@ function NanoleafAurora(option) {
             console.log("Event:Connection Opened ");
         };
         SSE_Event_Source.onerror = function (event) {
-                console.log("Event:Connection Closed");
-                //aurora.Eventing();
+            console.log("Event:Connection Closed");
+            //aurora.Eventing();
         };
         SSE_Event_Source.onmessage = function (event) {
             // Do something with the data:
@@ -48,7 +49,7 @@ function NanoleafAurora(option) {
         //};
         console.log("SSE started");
     };
-    this.CheckAuroraEventData = function(event) {
+    this.CheckAuroraEventData = function (event) {
         try {
             var data = JSON.parse(event.data);
             console.log(data);
@@ -133,8 +134,10 @@ function NanoleafAurora(option) {
             console.log(event);
         }
     }
-    this.SetGroupScenario = function (v) {
-        var sgs = this.Send("SetGroupScenario/" + v);
+    this.SetGroupScenario = function (v, room) {
+        console.log(room);
+
+        var sgs = this.Send("SetGroupScenario/" +room+ "/" + v);
         sgs.then(function (data) {
             if (data !== "Done") {
                 alert("Es ist ein Fehler aufgetreten:" + data);
@@ -143,12 +146,12 @@ function NanoleafAurora(option) {
         });
 
     };
-    this.GetGroupScenarios = function() {
+    this.GetGroupScenarios = function () {
         if (GroupScenariousRendered === true) return true;
-        var ggs = this.Send("GetGroupScenario/0");
+        var ggs = this.Send("GetGroupScenariosForRooms/0");
         ggs.then(function (data) {
             if (data === null) {
-                window.setTimeout("aurora.GetGroupScenarios()", 25000);
+                window.setTimeout("aurora.GetGroupScenariosForRooms/0", 25000);
                 return;
             }
             let aurora_Group = document.getElementById("Aurora_Group");
@@ -156,21 +159,33 @@ function NanoleafAurora(option) {
             groupwrapper.id = "GroupPowerScenarios";
             groupwrapper.classList.add("groupcontainer")
             aurora_Group.append(groupwrapper);
-            for (var i = 0; i < data.length; i++) {
-                let group = document.createElement("DIV");
-                group.classList.add("groupscenario");
-                group.innerText = data[i];
-                groupwrapper.append(group);
-                group.addEventListener("click", function (event) {
-                    t.SetGroupScenario(event.target.innerText);
-                })
+            let foundedrooms = Object.getOwnPropertyNames(data);
+            for (var i = 0; i < foundedrooms.length; i++) {
+                let room = foundedrooms[i];
+                let roomlist = data[room];
+                if (roomlist.length > 0) {
+                    let group = document.createElement("DIV");
+                    group.classList.add("groupscenario");
+                    group.innerText = room;
+                    groupwrapper.append(group);
+                    for (var j = 0; j < roomlist.length; j++) {
+                        let groupentries = document.createElement("DIV");
+                        groupentries.innerText = roomlist[j];
+                        groupentries.classList.add("groupscenarioentry");
+                        groupentries.dataset.room = room;
+                        group.append(groupentries);
+                        groupentries.addEventListener("click", function (event) {
+                            t.SetGroupScenario(event.target.innerText, event.target.dataset.room);
+                        });
+                    }
+                }
             }
             GroupScenariousRendered = true;
         });
     }
     this.GetAurora = function (serial) {
         for (var i = 0; i < _data.length; i++) {
-            if (_data[i].NewAurora === true || _data[i].nlj ===null) continue;
+            if (_data[i].NewAurora === true || _data[i].nlj === null) continue;
             var s = _data[i].nlj.serialNo;
             if (s === serial) {
                 return _data[i].nlj;
@@ -228,12 +243,11 @@ function NanoleafAurora(option) {
         this.Send("SetSelectedScenario/" + serialNo + "/" + v).then(function () {
             t.ColorPickers[serialNo].color.hsv = { h: 0, s: 0, v: au.state.brightness.value };
             t.RenderAurora();
-        }).catch(function (err)
-        {
+        }).catch(function (err) {
             console.log(err);
         });
-        
-        
+
+
         return;
     };
     this.ColorPickerInit = function (serial, aur) {
@@ -248,7 +262,7 @@ function NanoleafAurora(option) {
 
         });
     };
-    this.UpdateColor = function(serial){
+    this.UpdateColor = function (serial) {
         console.log(serial);
         var aur = this.GetAurora(serial);
         var st = aur.state;
@@ -256,8 +270,8 @@ function NanoleafAurora(option) {
         st.hue.value = color.h;
         st.saturation.value = color.s
         st.brightness.value = color.v
-        this.Send("SetHSVColor/" + serial, color,"POST");
-        
+        this.Send("SetHSVColor/" + serial, color, "POST");
+
 
     }
     this.RenderAurora = function () {
@@ -314,19 +328,27 @@ function NanoleafAurora(option) {
                 auroraWrapper.append(aurlight);
                 this.ColorPickerInit(faid, _data[x].nlj);
             }
-            if (_data.length > 1) {
-                let ag = document.createElement("DIV");
-                ag.id = "Aurora_Group";
-                ag.classList.add("auroraContainer");
+            _newData = false;
+        }
+        if (_data.length > 1) {
+            let ag = document.createElement("DIV");
+            ag.id = "Aurora_Group";
+            ag.classList.add("auroraContainer");
+
+            for (var i = 0; i < _data.length; i++) {
+                let room = _data[i].room;
+                if (workedGroupPower.indexOf(room) != -1) continue;
+
+                workedGroupPower.push(room);
                 let agname = document.createElement("DIV");
                 agname.classList.add("auroraName");
-                agname.innerText = room + " Aurora";
+                agname.innerText = room;
                 let agon = document.createElement("DIV");
                 agon.innerText = "Power On";
                 agon.classList.add("groupcontainer");
                 agon.id = "GroupPowerOn";
                 agon.addEventListener("click", function () {
-                    t.Send("SetGroupPowerState/true").then(function () {
+                    t.Send("SetGroupPowerState/" + room + "/true").then(function () {
                         t.UpdateData();
                     });
                 })
@@ -335,17 +357,18 @@ function NanoleafAurora(option) {
                 agoff.classList.add("groupcontainer");
                 agoff.id = "GroupPowerOff";
                 agoff.addEventListener("click", function () {
-                    t.Send("SetGroupPowerState/false").then(function () {
+                    t.Send("SetGroupPowerState/" + room + "/false").then(function () {
                         t.UpdateData();
                     });
                 })
                 ag.append(agname);
                 ag.append(agon);
                 ag.append(agoff);
-                auroraWrapper.append(ag);
             }
-            _newData = false;
+            
+            auroraWrapper.append(ag);
         }
+
         if (_data.length > 1) {
             this.GetGroupScenarios();
         }
@@ -408,16 +431,16 @@ function NanoleafAurora(option) {
         //Init Nanaoleaf && Get Server Data
         var request = this.Send("Get");
         request.then(function (data) {
-                 if (typeof _data === "undefined" || _data.length !== data.length) {
-                    _newData = true;
-                    auroraWrapper.innerHTML = "";
-                    _PowerDom = [];
-                } else {
-                    _newData = false;
-                }
-                _data = data;
-                t.d = data;
-                t.RenderAurora();
+            if (typeof _data === "undefined" || _data.length !== data.length) {
+                _newData = true;
+                auroraWrapper.innerHTML = "";
+                _PowerDom = [];
+            } else {
+                _newData = false;
+            }
+            _data = data;
+            t.d = data;
+            t.RenderAurora();
             return true;
         }).catch(function (ex) {
             console.log(ex);
