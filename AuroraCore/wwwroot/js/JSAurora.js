@@ -337,7 +337,7 @@ function NanoleafAurora(option) {
 
             for (var i = 0; i < _data.length; i++) {
                 let room = _data[i].room;
-                if (workedGroupPower.indexOf(room) != -1) continue;
+                if (workedGroupPower.indexOf(room) != -1 || room === null) continue;
 
                 workedGroupPower.push(room);
                 let agname = document.createElement("DIV");
