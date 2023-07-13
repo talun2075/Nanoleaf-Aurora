@@ -18,7 +18,7 @@ namespace Aurora
             Hue,
             Saturation,
             Scenarios,
-            NewNLJ
+            NewNLJ,
         }
 
         /// <summary>

@@ -257,8 +257,11 @@ namespace Aurora
                                     re = await a.GetNanoLeafInformations();
                                 }
                                 //If false there is an error on init.
-                                a.Aurora_Changed += AuroraChanged;
-                                AurorasList.Add(a);
+                                if (re)
+                                {
+                                    a.Aurora_Changed += AuroraChanged;
+                                    AurorasList.Add(a);
+                                }
                             }
 
                         }
@@ -292,11 +295,14 @@ namespace Aurora
                 {
                     await InitAuroraWrapper();
                 }
-                foreach (AuroraLigth aurora in AurorasList)
+                else
                 {
-                    if (aurora.NLJ == null)
+                    foreach (AuroraLigth aurora in AurorasList)
                     {
-                        await aurora.GetNanoLeafInformations();
+                        if (aurora.NLJ == null)
+                        {
+                            await aurora.GetNanoLeafInformations();
+                        }
                     }
                 }
                 return true;

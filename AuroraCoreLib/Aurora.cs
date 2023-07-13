@@ -51,7 +51,7 @@ namespace Aurora
                 //Wichtig. Wird für PUT und POST benötigt, wenn ein No Content Status (204) geliefert wird.
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.ExpectContinue = false;
-                _httpClient.Timeout = new TimeSpan(0, 0, 12);
+                _httpClient.Timeout = new TimeSpan(0, 0, 2);
                 if (SubscripeToDeviceEvents && _auroraEvent == null)
                 {
                     _auroraEvent = new AuroraEvent(new AuroraEventConstructor("http://" + Ip + ":" + AuroraConstants.Port + AuroraConstants.Apipath + Token));
