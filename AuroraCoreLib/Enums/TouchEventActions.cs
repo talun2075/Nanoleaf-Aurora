@@ -6,7 +6,8 @@ namespace AuroraCoreLib.Enums
         SetScenario,
         SetHSV,
         SetBrightness,
-        SetRandomScenario
+        SetRandomScenario,
+        Nothing //for SingleTab Error
 
     }
 }

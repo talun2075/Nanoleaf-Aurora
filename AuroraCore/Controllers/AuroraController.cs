@@ -253,6 +253,17 @@ namespace AuroraWeb.Controllers
             if (string.IsNullOrEmpty(room)) return null;
             return await AuroraWrapper.SetGroupScenarios(room,id);
         }
+        /// <summary>
+        /// Setzen der Gruppen Scenarien Random
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("SetGroupRandomScenario/{room}")]
+        public async Task<String> SetGroupRandomScenario(string room)
+        {
+            if (string.IsNullOrEmpty(room)) return null;
+            return await AuroraWrapper.SetGroupRandomScenarios(room);
+        }
         [HttpGet("SetHue/{id}/{v}")]
         public async Task<Boolean> SetHue(string id, int v)
         {

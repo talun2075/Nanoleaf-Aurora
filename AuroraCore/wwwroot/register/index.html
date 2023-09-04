@@ -78,7 +78,7 @@
                 return;
             }
             Send("/Aurora/RegisterNewUser/" + val).then(function (data) {
-                document.getElementById("RegisterResult").innerText = data;
+                document.getElementById("RegisterResult").innerText = data.auth_token;
             })
 
         })

@@ -69,6 +69,15 @@ namespace Aurora
                 AuroraConstants.log.ServerErrorsAdd("AuroraConstruktor", ex);
             }
         }
+        public void Disconnect()
+        {
+            if (_auroraEvent != null)
+            {
+                _auroraEvent.Aurora_Subscriped_Event_Fired -= AuroraEvent_Aurora_Subscriped_Event_Fired;
+                _auroraEvent.Dispose();
+            }
+           
+        }
         #region PublicMethods
         public async Task<string> SetSaturation(int newvalue)
         {
@@ -568,7 +577,6 @@ namespace Aurora
         /// <param name="e"></param>
         private void AuroraEvent_Aurora_Subscriped_Event_Fired(object sender, AuroraFiredEvent e)
         {
-            //AuroraConstants.log.InfoLog("Aurora Device:" + Name, " hat ein Event gefeuert.ID:" + e.ID.ToString());
             foreach (var item in e.events)
             {
                 //Schleife durchlaufen und je nach Event drauf reagieren.
@@ -649,7 +657,8 @@ namespace Aurora
 
 
                         Enum.TryParse<EventIDTouchAttributtes>(item.gesture.ToString(), out EventIDTouchAttributtes eITA);
-                        //AuroraConstants.log.InfoLog("Touch Event:Item:" + item.attr.ToString(), " eita:" + eITA.ToString());
+                        AuroraConstants.log.InfoLog("Aurora Device:" + Name, " hat ein Event gefeuert.ID:" + e.ID.ToString());
+                        AuroraConstants.log.InfoLog("Touch Event:Item:" + item.panelId.ToString(), " eita:" + eITA.ToString());
                         if (UseTouch)
                         {
                             TouchData touchData = TouchList.FirstOrDefault(x => x.EventType == eITA);

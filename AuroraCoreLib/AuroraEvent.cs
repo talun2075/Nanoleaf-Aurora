@@ -14,7 +14,7 @@ namespace Aurora
     {
         public event EventHandler<AuroraFiredEvent> Aurora_Subscriped_Event_Fired = delegate { };
         private readonly EventSourceReader evt;
-        private readonly AuroraEventConstructor aec;
+        private AuroraEventConstructor aec;
         public AuroraEvent(AuroraEventConstructor _aec)
         {
             try
@@ -28,19 +28,19 @@ namespace Aurora
 
                 evt = new EventSourceReader(new Uri(aec.URI));
                 evt.MessageReceived += Evt_MessageReceived;
-                evt.Disconnected += async (object sender, DisconnectEventArgs e) =>
-                {
-                    //if (e.Exception != null)
-                    //    AuroraConstants.log.ServerErrorsAdd("AuroraEvent:Disconnected", e.Exception);
-                    await Task.Delay(e.ReconnectDelay);
-                    evt.Start(); // Reconnect to the same URL
-                };
+                evt.Disconnected += EventSourcReaderEvent;
                 evt.Start();
             }
             catch (Exception ex)
             {
                 AuroraConstants.log.ServerErrorsAdd("AuroraEvent:Global", ex, aec.URI);
             }
+        }
+
+        private async void EventSourcReaderEvent(object sender, DisconnectEventArgs e)
+        {
+            await Task.Delay(e.ReconnectDelay);
+            evt.Start();
         }
         private void Evt_MessageReceived(object sender, EventSourceMessageEventArgs e)
         {
@@ -65,5 +65,11 @@ namespace Aurora
             }
         }
 
+        public void Dispose()
+        {
+            evt.Disconnected -= EventSourcReaderEvent;
+            evt.Dispose();
+            aec = null;
+        }
     }
 }

@@ -492,7 +492,28 @@ namespace Aurora
                 return ex.Message;
             }
         }
-
+        /// <summary>
+        /// Set Group Scenarios
+        /// </summary>
+        /// <param name="scenario"></param>
+        /// <returns></returns>
+        public async static Task<String> SetGroupRandomScenarios(string room)
+        {
+            if (!await CheckAuroraLiving()) return null;
+            try
+            {
+                foreach (AuroraLigth aurora in AurorasList)
+                {
+                    if (string.IsNullOrEmpty(aurora.Room) || aurora.Room.ToLower() != room.ToLower()) continue;
+                        await aurora.SetRandomScenario();
+                }
+                return "Done";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
         public async static Task<Boolean> RefreshAruroaProperties()
         {
             try
