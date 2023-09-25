@@ -148,10 +148,10 @@ function NanoleafAurora(option) {
     };
     this.GetGroupScenarios = function () {
         if (GroupScenariousRendered === true) return true;
-        var ggs = this.Send("GetGroupScenariosForRooms/0");
+        var ggs = this.Send("GetGroupScenariosForRooms");
         ggs.then(function (data) {
             if (data === null) {
-                window.setTimeout("aurora.GetGroupScenariosForRooms/0", 25000);
+                window.setTimeout("aurora.GetGroupScenariosForRooms", 25000);
                 return;
             }
             let aurora_Group = document.getElementById("Aurora_Group");

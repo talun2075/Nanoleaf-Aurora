@@ -56,6 +56,7 @@ namespace AuroraWeb.Controllers
             {
                 if (string.IsNullOrEmpty(v) || string.IsNullOrEmpty(id)) return null;
                 AuroraLigth a = await AuroraWrapper.GetAurorabySerial(id);
+                if (a == null) return null;
                 if (a.Scenarios.Contains(v) && a.SelectedScenario != v)
                 {
                     await a.SetSelectedScenario(v);
@@ -107,13 +108,13 @@ namespace AuroraWeb.Controllers
         /// <param name="id">NAme</param>
         /// <param name="v">Value of Powerstate</param>
         /// <returns></returns>
-        [HttpGet("SetPowerStateByName/{id}/{v}")]
-        public async Task<Boolean> SetPowerStateByName(string id, string v)
+        [HttpGet("SetPowerStateByName/{name}/{v}")]
+        public async Task<Boolean> SetPowerStateByName(string name, string v)
         {
-            if (string.IsNullOrEmpty(v) || string.IsNullOrEmpty(id)) return false;
+            if (string.IsNullOrEmpty(v) || string.IsNullOrEmpty(name)) return false;
             if (Boolean.TryParse(v, out bool po))
             {
-                AuroraLigth a = await AuroraWrapper.GetAurorabyName(id);
+                AuroraLigth a = await AuroraWrapper.GetAurorabyName(name);
                 if (a == null) return false;
                 await a.SetPowerOn(po);
                 return a.NLJ.State.Powerstate.Value;
@@ -123,7 +124,7 @@ namespace AuroraWeb.Controllers
         [HttpGet("SetGroupPowerState/{room}/{id}")]
         public async Task<Boolean> SetGroupPowerState(string room, Boolean id)
         {
-            return await AuroraWrapper.GroupPowerOn(room,id);
+            return await AuroraWrapper.GroupPowerOn(room, id);
         }
         [HttpGet("SetGroupPowerStateAll/{id}")]
         public async Task<Boolean> SetGroupPowerStateAll(Boolean id)
@@ -146,6 +147,7 @@ namespace AuroraWeb.Controllers
         {
             if (string.IsNullOrEmpty(id)) return -999;
             AuroraLigth a = await AuroraWrapper.GetAurorabySerial(id);
+            if (a == null) return 0;
             if (v > a.NLJ.State.Brightness.Max || v < a.NLJ.State.Brightness.Min) return 0;
             if (a.NLJ.State.Brightness.Value != v)
             {
@@ -159,6 +161,7 @@ namespace AuroraWeb.Controllers
         {
             if (string.IsNullOrEmpty(id)) return -999;
             AuroraLigth a = await AuroraWrapper.GetAurorabySerial(id);
+            if (a == null) return 0;
             if (hsvcolor.v > a.NLJ.State.Brightness.Max || hsvcolor.v < a.NLJ.State.Brightness.Min) return 0;
             if (hsvcolor.s > a.NLJ.State.Saturation.Max || hsvcolor.s < a.NLJ.State.Saturation.Min) return 0;
             if (hsvcolor.h > a.NLJ.State.Hue.Max || hsvcolor.h < a.NLJ.State.Hue.Min) return 0;
@@ -182,6 +185,7 @@ namespace AuroraWeb.Controllers
         {
             if (string.IsNullOrEmpty(id)) return -999;
             AuroraLigth a = await AuroraWrapper.GetAurorabySerial(id);
+            if (a == null) return 0;
             if (v > a.NLJ.State.Saturation.Max || v < a.NLJ.State.Saturation.Min) return 0;
             if (a.NLJ.State.Saturation.Value != v)
             {
@@ -195,6 +199,7 @@ namespace AuroraWeb.Controllers
         {
             if (string.IsNullOrEmpty(id)) return -999;
             AuroraLigth a = await AuroraWrapper.GetAurorabySerial(id);
+            if (a == null) return 0;
             if (v > a.NLJ.State.ColorTemperature.Max || v < a.NLJ.State.ColorTemperature.Min) return 0;
             if (a.NLJ.State.ColorTemperature.Value != v)
             {
@@ -212,23 +217,18 @@ namespace AuroraWeb.Controllers
         public async Task<String> SetRandomScenario(string id, Boolean v = false)
         {
             if (string.IsNullOrEmpty(id)) return null;
-            if (await AuroraWrapper.CheckAuroraLiving())
-            {
-                AuroraLigth a = await AuroraWrapper.GetAurorabySerial(id);
-
-                return await a.SetRandomScenario(v);
-            }
-            return "false";
+            AuroraLigth a = await AuroraWrapper.GetAurorabySerial(id);
+            if (a == null) return "false";
+            return await a.SetRandomScenario(v);
         }
         /// <summary>
         /// Ermitteln der Gruppenscenarien
         /// </summary>
         /// <param name="id">Dummy</param>
         /// <returns></returns>
-        [HttpGet("GetGroupScenario/{id}")]
-        public async Task<List<String>> GetGroupScenario(string id)
+        [HttpGet("GetGroupScenario")]
+        public async Task<List<String>> GetGroupScenario()
         {
-            if (string.IsNullOrEmpty(id)) return null;
             return await AuroraWrapper.GetGroupScenarios();
         }
         /// <summary>
@@ -236,8 +236,8 @@ namespace AuroraWeb.Controllers
         /// </summary>
         /// <param name="id">Dummy</param>
         /// <returns></returns>
-        [HttpGet("GetGroupScenariosForRooms/{id}")]
-        public async Task<Dictionary<String, List<String>>> GetGroupScenariosForRooms(string id)
+        [HttpGet("GetGroupScenariosForRooms")]
+        public async Task<Dictionary<String, List<String>>> GetGroupScenariosForRooms()
         {
             return await AuroraWrapper.GetGroupScenariosforRooms();
         }
@@ -251,7 +251,7 @@ namespace AuroraWeb.Controllers
         {
             if (string.IsNullOrEmpty(id)) return null;
             if (string.IsNullOrEmpty(room)) return null;
-            return await AuroraWrapper.SetGroupScenarios(room,id);
+            return await AuroraWrapper.SetGroupScenarios(room, id);
         }
         /// <summary>
         /// Setzen der Gruppen Scenarien Random
@@ -269,6 +269,7 @@ namespace AuroraWeb.Controllers
         {
             if (string.IsNullOrEmpty(id)) return false;
             AuroraLigth a = await AuroraWrapper.GetAurorabySerial(id);
+            if (a == null) return false;
             if (v < a.NLJ.State.Hue.Min || v > a.NLJ.State.Hue.Max) return false;
             await a.SetHue(v);
             await a.RefreshProperties();
@@ -284,7 +285,7 @@ namespace AuroraWeb.Controllers
         public async Task<string> RegisterNewUser(string id)
         {
             if (string.IsNullOrEmpty(id)) return null;
-            AuroraLigth a = new ("New", id, "NewAurora");
+            AuroraLigth a = new("New", id, "NewAurora");
             var retval = await a.NewUser();
             if (String.IsNullOrEmpty(retval))
             {
