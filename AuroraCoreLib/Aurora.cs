@@ -22,6 +22,7 @@ namespace Aurora
     {
         public event EventHandler<AuroraLigth> Aurora_Changed = delegate { };
         private readonly AuroraEvent _auroraEvent;
+        private Boolean GlobalTouchEnabled = false;
         /// <summary>
         /// Benutzter Web Client
         /// Wichtig: _httpClient.DefaultRequestHeaders.ExpectContinue = false; um mit StatusCode 204 arbeiten zu können.
@@ -34,7 +35,7 @@ namespace Aurora
         /// <param name="_ip">IP of the Aurora</param>
         /// <param name="_Name"></param>
         /// <param name="port">Port (Default 16021)</param>
-        public AuroraLigth(string token, string _ip, string _Name, string serial = "", Boolean SubscripeToDeviceEvents = false, Boolean _useTouch = false)
+        public AuroraLigth(string token, string _ip, string _Name, string serial = "", Boolean _subscripeToDeviceEvents = false, Boolean _useTouch = false)
         {
             try
             {
@@ -52,7 +53,7 @@ namespace Aurora
                 _httpClient = new HttpClient();
                 _httpClient.DefaultRequestHeaders.ExpectContinue = false;
                 _httpClient.Timeout = new TimeSpan(0, 0, 2);
-                if (SubscripeToDeviceEvents && _auroraEvent == null)
+                if ((_subscripeToDeviceEvents || _useTouch) && _auroraEvent == null)
                 {
                     _auroraEvent = new AuroraEvent(new AuroraEventConstructor("http://" + Ip + ":" + AuroraConstants.Port + AuroraConstants.Apipath + Token));
                     _auroraEvent.Aurora_Subscriped_Event_Fired += AuroraEvent_Aurora_Subscriped_Event_Fired;
@@ -249,6 +250,14 @@ namespace Aurora
         /// <returns></returns>
         public async Task<Boolean> GetNanoLeafInformations()
         {
+            if(TouchSystemConfig == null)
+            {
+                if (!await GetAuroraTouchState())
+                {
+                    TouchSystemConfig = new();
+                }
+            }
+            
             var json = await ConnectToNanoleaf(AuroraConstants.RequestTypes.GET, "INIT");
 
             if (String.IsNullOrEmpty(json))
@@ -566,11 +575,12 @@ namespace Aurora
 
         public List<TouchData> TouchList { get; set; }
         [DataMember]
-        public String OpenAPISupportetFirmwareVersion { get; private set; } = "3.2.0";
+        public String OpenAPISupportetFirmwareVersion { get; private set; } = "9.2.0";
+        public TouchSystemConfig TouchSystemConfig { get; set; }
         #endregion PublicProperties
         #region PrivateMethods
 
-                /// <summary>
+        /// <summary>
         /// Fired Events from The Device
         /// </summary>
         /// <param name="sender"></param>
@@ -692,6 +702,37 @@ namespace Aurora
             }
         }
 
+        private async Task<Boolean> GetAuroraTouchState()
+        {
+            try
+            {
+                string getglobaltouchstate = "{\"write\" : {\"command\" : \"" + CommandList.getTouchKillSwitch.ToString() + "\"}}";
+                var globaltouchstate = await ConnectToNanoleaf(AuroraConstants.RequestTypes.PUT, "/effects", getglobaltouchstate);
+                if (string.IsNullOrEmpty(globaltouchstate))
+                {
+                    return false;
+                }
+                GlobalTouch gt = JsonSerializer.Deserialize<GlobalTouch>(globaltouchstate);
+                GlobalTouchEnabled = gt.TouchKillSwitchOn;
+                if (GlobalTouchEnabled)
+                {
+                    string getcurrenttouchstate = "{\"write\" : {\"command\" : \"" + CommandList.requestTouchConfig.ToString() + "\"}}";
+                    var touchstate = await ConnectToNanoleaf(AuroraConstants.RequestTypes.PUT, "/effects", getcurrenttouchstate);
+                    TouchSystemConfig = JsonSerializer.Deserialize<TouchSystemConfig>(touchstate);
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        private async void SetAuroraTouchState(bool touchKillSwitchOn)
+        {
+            //{"write":{"command":"setTouchKillSwitch","touchKillSwitchOn":true}}
+            string setglobaltouchswitch = "{\"write\" : {\"command\" : \"" + CommandList.setTouchKillSwitch.ToString() + "\",\"touchKillSwitchOn\":"+touchKillSwitchOn+"}}";
+            _ = await ConnectToNanoleaf(AuroraConstants.RequestTypes.PUT, "/effects", setglobaltouchswitch);
+        }
         private void HandleTouchData(TouchData td)
         {
             switch (td.EventActions)
@@ -810,14 +851,12 @@ namespace Aurora
             }
             try
             {
-                using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(json)))
-                {
-                    // Deserialization from JSON  
-                    DataContractJsonSerializer deserializer = new(typeof(NanoLeafJsonDetailedEffectListAnimationRoot));
-                    var xx = (NanoLeafJsonDetailedEffectListAnimationRoot)deserializer.ReadObject(ms);
-                    if (n != null)
-                        n.Effects.ScenariosDetailed = xx;
-                }
+                using var ms = new MemoryStream(Encoding.Unicode.GetBytes(json));
+                // Deserialization from JSON  
+                DataContractJsonSerializer deserializer = new(typeof(NanoLeafJsonDetailedEffectListAnimationRoot));
+                var xx = (NanoLeafJsonDetailedEffectListAnimationRoot)deserializer.ReadObject(ms);
+                if (n != null)
+                    n.Effects.ScenariosDetailed = xx;
                 return true;
             }
             catch (Exception ex)

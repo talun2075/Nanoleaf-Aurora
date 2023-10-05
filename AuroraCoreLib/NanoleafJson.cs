@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AuroraCoreLib.Enums;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -112,8 +113,75 @@ namespace Aurora
     [DataContract]
     public class NanoleafJsonPanelLayoutLayout
     {
-        [DataMember(Name = "layoutData")]
-        public string LayoutData { get; set; }
+        [DataMember(Name = "numPanels")]
+        public int NumPanels { get; set; }
+        
+        [DataMember(Name = "sideLength")]
+        public int SideLength { get; set; }
+        
+        [DataMember(Name = "positionData")]
+        public List<NanoLeafJsonPositionData> PositionData { get; set; }
+    }
+
+    [DataContract]
+    public class NanoLeafJsonPositionData
+    {
+        [DataMember(Name = "panelId")]
+        public int PanelId { get; set; }
+        
+        [DataMember(Name = "x")]
+        public int X { get; set; }
+
+        [DataMember(Name = "y")]
+        public int Y { get; set; }
+
+        [DataMember(Name = "o")]
+        public int Orientation { get; set; }
+
+        [DataMember(Name = "shapeType")]
+        public ShapeType ShapeType { get; set; }
+
+        public int SideLenght
+        {
+            get
+            {
+                int lengt = 0;
+                switch (ShapeType)
+                {
+                    case ShapeType.ControlSquareMaster:
+                    case ShapeType.ControlSquarePassive:
+                    case ShapeType.Square:
+                        lengt = 100;
+                        break;
+                    case ShapeType.Triangle:
+                        lengt = 150;
+                        break;
+                    case ShapeType.ControllerCap:
+                    case ShapeType.PowerConnector:
+                    case ShapeType.LinesConnector:
+                        lengt = 11;
+                        break;
+                    case ShapeType.HexagonShapes:
+                    case ShapeType.MiniTriangleShapes:
+                        lengt = 67;
+                        break;
+                    case ShapeType.TriangleShapes:
+                    case ShapeType.ElementsHexagons:
+                        lengt = 134;
+                        break;
+                    case ShapeType.LightLines:
+                        lengt = 154;
+                        break;
+                    case ShapeType.LightLinesSingleZone:
+                        lengt = 77;
+                        break;
+                    case ShapeType.ElementsHexagonsCorner:
+                        lengt = 58;
+                        break;
+                }
+                return lengt;
+            }
+        }
     }
 
     [DataContract]

@@ -12,6 +12,9 @@
     max-height: 15px;
     margin-right: 5px;
 }
+.layoutimage{
+    width: 100%;
+}
 /*.errorMessage {
     max-width: 150px;
     background-color: grey;

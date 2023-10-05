@@ -321,10 +321,14 @@ function NanoleafAurora(option) {
                 scen.id = "Scenarios_" + faid;
                 scen.setAttribute("data-serial", faid);
                 scen.classList.add("scenarios");
+                let auroraimage = document.createElement("IMG");
+                auroraimage.setAttribute("src", "/images/lights/" + _data[x].name + ".png")
+                auroraimage.classList.add("layoutimage");
                 aurlight.append(aurname);
                 aurlight.append(containerdom);
                 aurlight.append(cp);
                 aurlight.append(scen);
+                aurlight.append(auroraimage);
                 auroraWrapper.append(aurlight);
                 this.ColorPickerInit(faid, _data[x].nlj);
             }

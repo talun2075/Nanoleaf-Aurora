@@ -28,7 +28,13 @@ namespace Aurora
 
                 evt = new EventSourceReader(new Uri(aec.URI));
                 evt.MessageReceived += Evt_MessageReceived;
-                evt.Disconnected += EventSourcReaderEvent;
+                evt.Disconnected += async (object sender, DisconnectEventArgs e) =>
+                {
+                    if (e.Exception != null)
+                        AuroraConstants.log.ServerErrorsAdd("AuroraEvent:Disconnected", e.Exception);
+                    await Task.Delay(e.ReconnectDelay);
+                    evt.Start(); // Reconnect to the same URL
+                };
                 evt.Start();
             }
             catch (Exception ex)
@@ -67,6 +73,7 @@ namespace Aurora
 
         public void Dispose()
         {
+            evt.MessageReceived -= Evt_MessageReceived;
             evt.Disconnected -= EventSourcReaderEvent;
             evt.Dispose();
             aec = null;

@@ -1,6 +1,8 @@
 ﻿using Aurora;
 using AuroraCore.Classes;
 using AuroraCore.Classes.Events;
+using AuroraCore.Classes.Images;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,11 @@ namespace AuroraWeb.Controllers
         /// </summary>
         /// <returns>Nanoleaf Object</returns>
         private static Boolean EventingInited = false;
+        readonly IWebHostEnvironment _env = null;
+        public AuroraController(IWebHostEnvironment env)
+        {
+            _env = env;
+        }
 
         [HttpGet("Get")]
         public async Task<List<AuroraLigth>> Get()
@@ -29,6 +36,12 @@ namespace AuroraWeb.Controllers
             {
                 AuroraWrapper.Auroras_Changed += AuroraWrapper_Auroras_Changed;
                 EventingInited = true;
+            }
+            //images creation
+            Util util = new(_env);
+            foreach (AuroraLigth aurora in AuroraWrapper.AurorasList)
+            {
+                util.Start(aurora.NLJ.PanelLayout.Layout, aurora.Name.ToLower());
             }
             return AuroraWrapper.AurorasList;
         }
