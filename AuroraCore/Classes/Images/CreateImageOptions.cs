@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
@@ -20,6 +21,7 @@ namespace AuroraCore.Classes.Images
         public int ResizeFactor { get; set; } = 3;
         public int Border { get; set; } = 100;
         public int BorderResized => ResizeFactor * Border;
+        public Boolean CreateOnlyifNotExist { get; set; } = true;
 
 
     }

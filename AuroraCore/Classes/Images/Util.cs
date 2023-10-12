@@ -15,6 +15,7 @@ namespace AuroraCore.Classes.Images
         {
             _cIO = new(env);
         }
+        public Boolean CreateOnlyIfNotExist => _cIO.CreateOnlyifNotExist;
         public Util(CreateImageOptions cIO)
         {
             _cIO = cIO;
@@ -175,6 +176,10 @@ namespace AuroraCore.Classes.Images
             image.Save(_cIO.Path + imagename + "." + _cIO.Extension, _cIO.Type);
             graphicIm.Dispose();
             image.Dispose();
+        }
+        public Boolean CheckExist()
+        {
+            return Directory.Exists(_cIO.Path);
         }
     }
 }

@@ -24,7 +24,7 @@ ChildElemts used for Touch Events
 -->
 <AuroraKnowingDevices>
 	<AuroraKnowingDevice MacAdress="00:55:DA:50:C3:45" AuthToken="vD2YxRQLkLZ8SxhYtVsIhCTMsp3ws5A4" DeviceName ="Esszimmer" KnowingIP="192.168.0.112" Serial="S17122A4899" UseSubscription ="false"/>
-	<AuroraKnowingDevice MacAdress="80:8A:F7:07:47:BF" AuthToken="0KMhsarijWVGKkYRTAXu34hfV1DcBicj" DeviceName ="Gästezimmer" KnowingIP="192.168.0.111" Serial="S22380H0021" UseSubscription ="true" UseTouch="true">
+	<AuroraKnowingDevice MacAdress="80:8A:F7:07:47:BF" AuthToken="0KMhsarijWVGKkYRTAXu34hfV1DcBicj" DeviceName ="Gästezimmer" KnowingIP="192.168.0.111" Serial="S22380H0021" UseSubscription ="false" UseTouch="false">
 		<TouchData>
 			<SingleTap Hue="54" Saturation="31" Brightness="15" Value="" Action="Nothing" />
 			<DoubleTap Action="SetRandomScenario" />

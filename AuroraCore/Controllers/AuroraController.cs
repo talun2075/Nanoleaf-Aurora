@@ -37,8 +37,12 @@ namespace AuroraWeb.Controllers
                 AuroraWrapper.Auroras_Changed += AuroraWrapper_Auroras_Changed;
                 EventingInited = true;
             }
-            //images creation
+            //images creation if in the settings only 
             Util util = new(_env);
+            if (util.CreateOnlyIfNotExist && util.CheckExist())
+            {
+                return AuroraWrapper.AurorasList;
+            }
             foreach (AuroraLigth aurora in AuroraWrapper.AurorasList)
             {
                 util.Start(aurora.NLJ.PanelLayout.Layout, aurora.Name.ToLower());
