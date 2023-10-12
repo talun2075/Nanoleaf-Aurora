@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /AuroraCore/wwwroot/images/lights/wohnzimmer rechts.png
+/AuroraCore/wwwroot/images/lights/esszimmer.png
+/AuroraCore/wwwroot/images/lights/gästezimmer.png
+/AuroraCore/wwwroot/images/lights/wohnzimmer links.png
