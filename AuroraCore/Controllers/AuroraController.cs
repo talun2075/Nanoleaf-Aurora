@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -37,9 +38,10 @@ namespace AuroraWeb.Controllers
                 AuroraWrapper.Auroras_Changed += AuroraWrapper_Auroras_Changed;
                 EventingInited = true;
             }
-            //images creation if in the settings only 
+            //images creation if in the settings only && is Windows OS
+            bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             Util util = new(_env);
-            if (util.CreateOnlyIfNotExist && util.CheckExist())
+            if (!isWindows || (util.CreateOnlyIfNotExist && util.CheckExist()))
             {
                 return AuroraWrapper.AurorasList;
             }
